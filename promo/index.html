@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>hAusbau – Plan your house</title>
+<meta name="description" content="hAusbau: plan your house down to the last wire – walls, wiring, devices, light, costs, on every screen.">
+<meta name="color-scheme" content="dark">
+<!--
+  Promo page (D-210). One file, CSS and script inline; the screenshots in photos/ are stills of
+  the showreel clips – regenerate with `$HAUSBAU_PY tools/showreel/promo_stills.py`.
+-->
+<style>
+:root {
+  --bg: #07081a;
+  --ink: #f4f3ff;
+  --muted: #a9a8c8;
+  --line: rgba(255, 255, 255, .1);
+  --card: rgba(255, 255, 255, .05);
+  --shadow: 0 40px 80px -30px rgba(0, 0, 0, .75), 0 18px 36px -18px rgba(0, 0, 0, .6);
+  --ease: cubic-bezier(.16, .84, .24, 1);
+  --a: #8b5cf6;
+  --b: #ec4899;
+  font-family: "Inter Display", Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.5;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+img { display: block; width: 100%; height: auto; }
+
+/* ---------- scroll progress ---------- */
+.progress {
+  position: fixed; inset: 0 0 auto 0; height: 4px; z-index: 10;
+  background: linear-gradient(90deg, #22d3ee, #8b5cf6, #ec4899, #f97316);
+  transform-origin: 0 50%; transform: scaleX(var(--p, 0));
+}
+
+/* ---------- hero ---------- */
+.hero {
+  position: relative; min-height: 100vh; min-height: 100svh;
+  display: grid; place-items: center; text-align: center;
+  padding: 96px 16px 64px; overflow: hidden; isolation: isolate;
+}
+.hero::before, .hero::after {
+  content: ""; position: absolute; z-index: -1; border-radius: 50%; filter: blur(90px); opacity: .75;
+}
+.hero::before {
+  width: 70vmax; height: 70vmax; left: -20vmax; top: -25vmax;
+  background: radial-gradient(circle, #5b3cc4, transparent 65%);
+  animation: drift 18s ease-in-out infinite alternate;
+}
+.hero::after {
+  width: 50vmax; height: 50vmax; right: -22vmax; top: 28%;
+  background: radial-gradient(circle, #e94560, transparent 65%);
+  animation: drift 22s ease-in-out infinite alternate-reverse;
+}
+@keyframes drift { to { transform: translate(12vmax, 8vmax) scale(1.15); } }
+.hero h1 {
+  margin: 0; font-size: clamp(64px, 14vw, 184px); line-height: .95; letter-spacing: -.045em; font-weight: 800;
+  background: linear-gradient(100deg, #fff 20%, #c4b5fd 45%, #f9a8d4 65%, #fdba74 85%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.hero .tag { margin: 18px auto 0; font-size: clamp(20px, 2.6vw, 30px); color: #dcdaf5; max-width: 22em; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 28px 0 0; padding: 0; list-style: none; }
+.chips li {
+  padding: 7px 16px; border-radius: 999px; font-size: 14px; letter-spacing: .02em;
+  background: var(--card); border: 1px solid var(--line); backdrop-filter: blur(8px);
+}
+.hero-shot { width: min(900px, 100%); margin: 56px auto 0; perspective: 1600px; }
+.hero-shot .browser { transform: rotateX(calc(18deg - var(--s, 0) * 18deg)) scale(calc(.94 + var(--s, 0) * .06)); transform-origin: 50% 100%; }
+.cue {
+  display: inline-block; margin-top: 40px; color: var(--muted); text-decoration: none; font-size: 14px; letter-spacing: .12em; text-transform: uppercase;
+}
+.cue::after { content: ""; display: block; width: 1px; height: 42px; margin: 10px auto 0; background: linear-gradient(var(--muted), transparent); animation: cue 2s ease-in-out infinite; }
+@keyframes cue { 0%, 100% { transform: scaleY(.4); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } }
+
+/* ---------- bands (one per feature) ---------- */
+.band {
+  position: relative; padding: clamp(72px, 12vh, 140px) 16px; overflow: hidden; isolation: isolate;
+}
+.band::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background:
+    radial-gradient(60% 70% at var(--gx, 85%) 30%, color-mix(in srgb, var(--a) 30%, transparent), transparent 70%),
+    radial-gradient(55% 60% at calc(100% - var(--gx, 85%)) 85%, color-mix(in srgb, var(--b) 24%, transparent), transparent 70%);
+}
+.band + .band { border-top: 1px solid var(--line); }
+.wrap { max-width: 1240px; margin: 0 auto; }
+.row { display: grid; grid-template-columns: 5fr 7fr; gap: clamp(28px, 5vw, 72px); align-items: center; }
+.row.flip { grid-template-columns: 7fr 5fr; }
+.row.flip .copy { order: 2; text-align: right; }
+.row.flip .copy p { margin-left: auto; }
+.kicker {
+  display: inline-block; margin: 0 0 14px; font-size: 13px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+  color: color-mix(in srgb, var(--a) 60%, white);
+}
+h2 {
+  margin: 0; font-size: clamp(38px, 5.2vw, 68px); line-height: 1.02; letter-spacing: -.035em; font-weight: 800;
+  background: linear-gradient(105deg, #fff 10%, color-mix(in srgb, var(--a) 55%, white) 55%, color-mix(in srgb, var(--b) 70%, white));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  padding-bottom: .06em;
+}
+.copy p:not(.kicker) { margin: 18px 0 0; max-width: 27em; font-size: clamp(17px, 1.5vw, 20px); color: var(--muted); }
+.center { text-align: center; }
+.center .copy p:not(.kicker) { margin-left: auto; margin-right: auto; }
+.center .copy { margin-bottom: clamp(36px, 6vh, 64px); }
+
+/* ---------- screens ---------- */
+.browser {
+  position: relative; border-radius: 14px; overflow: hidden; background: #15162b;
+  box-shadow: var(--shadow), 0 0 0 1px rgba(255, 255, 255, .08);
+}
+.browser::before {
+  content: ""; display: block; height: 26px;
+  background:
+    radial-gradient(circle at 16px 13px, #ff5f57 5px, transparent 5.5px),
+    radial-gradient(circle at 34px 13px, #febc2e 5px, transparent 5.5px),
+    radial-gradient(circle at 52px 13px, #28c840 5px, transparent 5.5px),
+    linear-gradient(#2a2b45, #232439);
+}
+.browser.bare::before { display: none; }
+.glow { position: relative; }
+.glow::before {
+  content: ""; position: absolute; inset: 8% 6% -4%; z-index: -1; border-radius: 30px; filter: blur(50px); opacity: .55;
+  background: linear-gradient(120deg, var(--a), var(--b));
+}
+.tilt { transform: perspective(1800px) rotateY(calc(var(--side, 1) * -7deg + var(--t, 0) * 5deg)) rotateX(calc(var(--t, 0) * -3deg)); transition: transform .25s linear; }
+.flip .tilt, .tilt.l { --side: -1; }
+figure { margin: 0; }
+figcaption { margin-top: 14px; font-size: 15px; font-weight: 600; color: var(--ink); text-align: center; letter-spacing: .01em; }
+figcaption span { display: block; font-weight: 400; color: var(--muted); font-size: 14px; }
+
+.grid { display: grid; gap: clamp(20px, 3vw, 36px); }
+.grid.two { grid-template-columns: repeat(2, 1fr); }
+.grid.three { grid-template-columns: repeat(3, 1fr); }
+.grid.four { grid-template-columns: repeat(2, 1fr); }
+.grid.five { grid-template-columns: repeat(5, 1fr); gap: clamp(10px, 1.6vw, 22px); }
+.grid .browser { border-radius: 10px; }
+.grid .browser::before { height: 18px; background-size: auto; background:
+  radial-gradient(circle at 12px 9px, #ff5f57 3.5px, transparent 4px),
+  radial-gradient(circle at 25px 9px, #febc2e 3.5px, transparent 4px),
+  radial-gradient(circle at 38px 9px, #28c840 3.5px, transparent 4px),
+  linear-gradient(#2a2b45, #232439); }
+.grid.three .browser:nth-child(1), .grid.three figure:nth-child(1) .browser { --r: 4deg; }
+
+/* phones */
+.phones { display: flex; justify-content: center; align-items: flex-end; gap: clamp(10px, 2.4vw, 36px); flex-wrap: wrap; }
+.phone {
+  width: clamp(130px, 17vw, 210px); padding: 9px; border-radius: 36px; background: #0d0d17;
+  box-shadow: var(--shadow), inset 0 0 0 2px #3a3a52, 0 0 0 1px rgba(255, 255, 255, .06);
+}
+.phone img { border-radius: 28px; }
+.phone::before {
+  content: ""; position: absolute; left: 50%; top: 16px; width: 30%; height: 16px; border-radius: 10px; background: #0d0d17;
+  transform: translateX(-50%); z-index: 1;
+}
+.phone { position: relative; }
+.phones .phone:nth-child(2), .phones .phone:nth-child(4) { margin-bottom: 30px; }
+.phones .phone:nth-child(3) { margin-bottom: 60px; }
+
+/* eyes */
+.eyes { background: linear-gradient(135deg, #ff7e5f, #feb47b 55%, #ffcf9a); color: #1d1530; }
+.eyes::before { display: none; }
+.eyes h2 { background: none; color: #1d1530; }
+.eyes .kicker { color: #6b2a1a; }
+.eyes .copy p:not(.kicker) { color: #4a2c2a; }
+.eye img { border-radius: 14px; box-shadow: 0 24px 40px -18px rgba(80, 20, 0, .6); aspect-ratio: 3 / 4; object-fit: cover; }
+.eye figcaption { color: #1d1530; }
+.eye figcaption span { color: #6b3b2d; font-variant-numeric: tabular-nums; }
+
+/* footer */
+.end { text-align: center; padding: clamp(100px, 18vh, 200px) 16px; position: relative; overflow: hidden; isolation: isolate; }
+.end::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: radial-gradient(50% 60% at 50% 60%, rgba(91, 60, 196, .55), transparent 70%), radial-gradient(40% 40% at 70% 30%, rgba(233, 69, 96, .35), transparent 70%);
+}
+.end h2 { font-size: clamp(64px, 12vw, 150px); background: linear-gradient(100deg, #fff 20%, #c4b5fd 50%, #f9a8d4 80%); -webkit-background-clip: text; background-clip: text; }
+.end p { margin: 14px 0 0; font-size: clamp(20px, 2.4vw, 28px); color: #dcdaf5; }
+.end small { display: block; margin-top: 48px; color: var(--muted); font-size: 13px; }
+
+/* video links under the hero screen */
+.films { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 36px; }
+.films a {
+  display: inline-flex; align-items: center; gap: 12px; padding: 12px 22px 12px 14px; border-radius: 999px;
+  color: #fff; text-decoration: none; text-align: left; line-height: 1.2;
+  background: var(--card); border: 1px solid rgba(255, 255, 255, .18); backdrop-filter: blur(8px);
+  transition: transform .2s var(--ease), background .2s, border-color .2s;
+}
+.films a:hover, .films a:focus-visible { transform: translateY(-2px); background: rgba(255, 255, 255, .1); border-color: rgba(255, 255, 255, .35); }
+.films a::before {
+  content: ""; flex: none; width: 38px; height: 38px; border-radius: 50%;
+  background: linear-gradient(110deg, #ff3b5c, #f97316);
+  -webkit-mask: radial-gradient(circle, #000 69%, transparent 70%);
+  box-shadow: 0 6px 18px -6px #ff3b5c;
+}
+.films a { position: relative; }
+.films a::after {
+  content: ""; position: absolute; left: 29px; top: 50%; transform: translateY(-50%);
+  border-left: 11px solid #fff; border-top: 7px solid transparent; border-bottom: 7px solid transparent;
+}
+.films b { display: block; font-size: 16px; }
+.films small { display: block; font-size: 13px; color: var(--muted); }
+
+/* contact box (top and end) */
+.contact {
+  position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 18px;
+  max-width: 760px; margin: 32px auto 0; padding: 16px 22px; border-radius: 18px; text-align: center;
+  background: linear-gradient(var(--bg), var(--bg)) padding-box,
+              linear-gradient(110deg, #22d3ee, #8b5cf6, #ec4899, #f97316) border-box;
+  border: 1.5px solid transparent; box-shadow: 0 20px 50px -25px rgba(139, 92, 246, .7);
+}
+.contact p { margin: 0; font-size: 16px; color: #dcdaf5; }
+.contact strong { color: #fff; }
+.contact a {
+  display: inline-block; padding: 9px 18px; border-radius: 999px; font-weight: 600; font-size: 15px; color: #fff; text-decoration: none;
+  background: linear-gradient(110deg, #8b5cf6, #ec4899); box-shadow: 0 8px 22px -10px #ec4899;
+  transition: transform .2s var(--ease), box-shadow .2s;
+  overflow-wrap: anywhere;
+}
+.contact a:hover, .contact a:focus-visible { transform: translateY(-2px); box-shadow: 0 14px 28px -10px #ec4899; }
+.end .contact { margin-top: 48px; }
+
+/* AI disclaimer at the end: the usual "AI" gradient inside, the same gradient reversed as border */
+.disclaimer {
+  max-width: 760px; margin: 28px auto 0; padding: 18px 24px; border-radius: 18px; text-align: center;
+  border: 2px solid transparent;
+  background:
+    linear-gradient(135deg, #4f46e5, #9333ea 50%, #db2777) padding-box,
+    linear-gradient(135deg, #db2777, #9333ea 50%, #4f46e5) border-box;
+  box-shadow: 0 22px 50px -24px rgba(147, 51, 234, .8);
+}
+.disclaimer p { margin: 0; font-size: 16px; line-height: 1.6; color: #fff; }
+.disclaimer .ai {
+  font-style: normal;
+  font-family: "Comic Sans MS", "Comic Sans", "Chalkboard SE", "Comic Neue", cursive;
+  font-size: 1.3em; font-weight: 700; line-height: 0;   /* bigger, but the line keeps its height */
+  padding: 0 .06em; color: #fff36b; text-shadow: 0 0 12px rgba(255, 243, 107, .55);
+}
+
+/* ---------- reveal on scroll: each panel comes in from its own side ---------- */
+.js .reveal {
+  opacity: 0;
+  transition: opacity .9s var(--ease), transform 1.2s var(--ease), filter 1.2s var(--ease);
+  transition-delay: var(--d, 0s);
+}
+.js .reveal[data-from="left"]       { transform: translateX(-22vw) rotate(-4deg); }
+.js .reveal[data-from="right"]      { transform: translateX(22vw) rotate(4deg); }
+.js .reveal[data-from="up"]         { transform: translateY(18vh); }
+.js .reveal[data-from="down"]       { transform: translateY(-14vh); }
+.js .reveal[data-from="zoom"]       { transform: scale(.72); filter: blur(10px); }
+.js .reveal[data-from="tilt-left"]  { transform: perspective(1200px) translateX(-12vw) rotateY(38deg); transform-origin: 0 50%; }
+.js .reveal[data-from="tilt-right"] { transform: perspective(1200px) translateX(12vw) rotateY(-38deg); transform-origin: 100% 50%; }
+.js .reveal[data-from="flip"]       { transform: perspective(1200px) translateY(12vh) rotateX(48deg); transform-origin: 50% 100%; }
+.js .reveal[data-from="spin"]       { transform: rotate(-14deg) scale(.8); }
+.js .reveal.in[data-from] { opacity: 1; transform: none; filter: none; }
+
+/* ---------- small screens ---------- */
+@media (max-width: 860px) {
+  .row, .row.flip { grid-template-columns: 1fr; }
+  .row.flip .copy { order: 0; text-align: left; }
+  .row.flip .copy p { margin-left: 0; }
+  .grid.two, .grid.three, .grid.four { grid-template-columns: 1fr; }
+  .grid.five { grid-template-columns: repeat(2, 1fr); }
+  .grid.five figure:last-child { grid-column: 1 / -1; width: 50%; margin: 0 auto; }
+  .phones .phone:nth-child(n) { margin-bottom: 0; }
+  .phone { width: calc(50% - 10px); max-width: 200px; }
+  .tilt { --side: 0 !important; }
+  .js .reveal[data-from="left"], .js .reveal[data-from="tilt-left"] { transform: translateX(-30vw); }
+  .js .reveal[data-from="right"], .js .reveal[data-from="tilt-right"] { transform: translateX(30vw); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .hero::before, .hero::after, .cue::after { animation: none; }
+  .js .reveal { opacity: 1; transform: none !important; filter: none; transition: none; }
+  .tilt, .hero-shot .browser { transform: none !important; }
+}
+</style>
+</head>
+<body>
+<div class="progress" aria-hidden="true"></div>
+
+<header class="hero">
+  <div>
+    <h1>hAusbau</h1>
+    <p class="tag">Plan your house – down to the last wire.</p>
+    <ul class="chips"><li>Walls &amp; rooms</li><li>Wiring</li><li>Devices</li><li>Light &amp; sun</li><li>Costs</li><li>iPhone · iPad · Mac · Web</li></ul>
+    <aside class="contact">
+      <p><strong>Like what you see?</strong> Development is ongoing – if you are interested, get in touch:</p>
+      <a href="mailto:hausbau@garvinhicking.de">hausbau@garvinhicking.de</a>
+    </aside>
+    <div class="hero-shot"><div class="browser"><img src="photos/intro.webp" width="1440" height="900" alt="The hAusbau start animation: a house drawn in light lines"></div></div>
+    <nav class="films" aria-label="Videos">
+      <a href="https://youtu.be/SZ9A7OaonDE" target="_blank" rel="noopener"><span><b>Watch the film</b><small>80 seconds · YouTube</small></span></a>
+      <a href="https://youtu.be/aYRGjx6R9Lo" target="_blank" rel="noopener"><span><b>Watch the full walkthrough</b><small>7 minutes · YouTube</small></span></a>
+    </nav>
+    <a class="cue" href="#start">Scroll</a>
+  </div>
+</header>
+
+<main>
+  <!-- 1 · start -->
+  <section class="band" id="start" style="--a:#8b5cf6; --b:#22d3ee; --gx:80%">
+    <div class="wrap row">
+      <div class="copy reveal" data-from="up">
+        <p class="kicker">Start</p>
+        <h2>A project in seconds</h2>
+        <p>Pick an example, bring your own 3-D scan – or start from a blank plan.</p>
+      </div>
+      <figure class="reveal" data-from="right" style="--d:.1s"><div class="tilt glow"><div class="browser"><img src="photos/example.webp" width="1440" height="900" loading="lazy" decoding="async" alt="The project list with a freshly added example house"></div></div></figure>
+    </div>
+  </section>
+
+  <!-- 2 · navigate -->
+  <section class="band" style="--a:#22d3ee; --b:#3b82f6; --gx:20%">
+    <div class="wrap row flip">
+      <div class="copy reveal" data-from="right">
+        <p class="kicker">Navigate</p>
+        <h2>Fly around your house</h2>
+        <p>Orbit, tilt, pan and zoom – with mouse, keys or the slider.</p>
+      </div>
+      <figure class="reveal" data-from="tilt-left" style="--d:.1s"><div class="tilt glow"><div class="browser"><img src="photos/navigate.webp" width="1440" height="900" loading="lazy" decoding="async" alt="The whole house in 3-D, zoomed and turned"></div></div></figure>
+    </div>
+  </section>
+
+  <!-- 3 · top bar -->
+  <section class="band" style="--a:#f59e0b; --b:#ec4899; --gx:85%">
+    <div class="wrap row">
+      <div class="copy reveal" data-from="left">
+        <p class="kicker">Tools</p>
+        <h2>Everything one click away</h2>
+        <p>Add menu, layers, tools – every button explains itself.</p>
+      </div>
+      <figure class="reveal" data-from="zoom" style="--d:.1s"><div class="tilt glow"><div class="browser"><img src="photos/topbar.webp" width="1440" height="900" loading="lazy" decoding="async" alt="The layers menu open over the house"></div></div></figure>
+    </div>
+  </section>
+
+  <!-- 4 · rooms -->
+  <section class="band center" style="--a:#a78bfa; --b:#60a5fa; --gx:50%">
+    <div class="wrap">
+      <div class="copy reveal" data-from="up">
+        <p class="kicker">Rooms</p>
+        <h2>Every room, from every angle</h2>
+        <p>Focus a room from above, look around in the panorama – then step inside.</p>
+      </div>
+      <div class="grid three">
+        <figure class="reveal" data-from="left"><div class="browser bare"><img src="photos/room.webp" width="1440" height="1088" loading="lazy" decoding="async" alt="Kitchen and living room from above"></div><figcaption>Top-down</figcaption></figure>
+        <figure class="reveal" data-from="up" style="--d:.15s"><div class="browser bare"><img src="photos/panorama.webp" width="1440" height="1088" loading="lazy" decoding="async" alt="Panorama view of the room"></div><figcaption>Panorama</figcaption></figure>
+        <figure class="reveal" data-from="right" style="--d:.3s"><div class="browser"><img src="photos/firstperson.webp" width="1440" height="900" loading="lazy" decoding="async" alt="First-person view inside the kitchen with its wiring"></div><figcaption>First person</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · walk -->
+  <section class="band" style="--a:#f43f5e; --b:#8b5cf6; --gx:15%">
+    <div class="wrap row flip">
+      <div class="copy reveal" data-from="up">
+        <p class="kicker">Walk</p>
+        <h2>Walk it before it's built</h2>
+        <p>From the cellar up the stairs, through the hall into the kitchen.</p>
+      </div>
+      <div class="grid two">
+        <figure class="reveal" data-from="flip"><div class="browser bare"><img src="photos/stairs.webp" width="1440" height="1088" loading="lazy" decoding="async" alt="Climbing the cellar stairs in first person"></div><figcaption>Up the stairs</figcaption></figure>
+        <figure class="reveal" data-from="flip" style="--d:.2s"><div class="browser bare"><img src="photos/kitchen.webp" width="1440" height="1088" loading="lazy" decoding="async" alt="Arriving in the kitchen"></div><figcaption>Into the kitchen</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · layers -->
+  <section class="band" style="--a:#34d399; --b:#06b6d4; --gx:80%">
+    <div class="wrap row">
+      <div class="copy reveal" data-from="left">
+        <p class="kicker">Layers</p>
+        <h2>Peel it apart</h2>
+        <p>Walls, wiring, devices – and every storey on its own.</p>
+      </div>
+      <figure class="reveal" data-from="spin" style="--d:.1s"><div class="tilt glow"><div class="browser"><img src="photos/layers.webp" width="1440" height="900" loading="lazy" decoding="async" alt="Only the wiring of all storeys, walls hidden"></div></div></figure>
+    </div>
+  </section>
+
+  <!-- 7 · select -->
+  <section class="band" style="--a:#facc15; --b:#f97316; --gx:20%">
+    <div class="wrap row flip">
+      <div class="copy reveal" data-from="right">
+        <p class="kicker">Select</p>
+        <h2>Click anything</h2>
+        <p>A wire, a device, a wall – highlighted at once, with everything about it.</p>
+      </div>
+      <figure class="reveal" data-from="tilt-left" style="--d:.1s"><div class="tilt glow"><div class="browser"><img src="photos/select.webp" width="1440" height="900" loading="lazy" decoding="async" alt="A selected wall, highlighted, with its inspector"></div></div></figure>
+    </div>
+  </section>
+
+  <!-- 8 · inspectors -->
+  <section class="band" style="--a:#60a5fa; --b:#a78bfa; --gx:85%">
+    <div class="wrap row">
+      <div class="copy reveal" data-from="up">
+        <p class="kicker">Inspect</p>
+        <h2>An inspector for everything</h2>
+        <p>Walls, wiring, devices and rooms – every detail at hand.</p>
+      </div>
+      <figure class="reveal" data-from="tilt-right" style="--d:.1s"><div class="tilt glow"><div class="browser"><img src="photos/inspectors.webp" width="1440" height="900" loading="lazy" decoding="async" alt="The devices inspector next to a cut-open house"></div></div></figure>
+    </div>
+  </section>
+
+  <!-- 9 · walls -->
+  <section class="band center" style="--a:#c06c84; --b:#6c5b7b; --gx:50%">
+    <div class="wrap">
+      <div class="copy reveal" data-from="zoom">
+        <p class="kicker">Build</p>
+        <h2>Draw a room in seconds</h2>
+        <p>Walls, movable corners, a flight of stairs, a door and a window.</p>
+      </div>
+      <div class="grid two">
+        <figure class="reveal" data-from="left"><div class="browser"><img src="photos/walls.webp" width="1440" height="900" loading="lazy" decoding="async" alt="A new room drawn onto the ground floor, corners being moved"></div><figcaption>Walls &amp; corners</figcaption></figure>
+        <figure class="reveal" data-from="right" style="--d:.15s"><div class="browser"><img src="photos/openings.webp" width="1440" height="900" loading="lazy" decoding="async" alt="Adding a window to the new room"></div><figcaption>Stairs, door &amp; window</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 · wires -->
+  <section class="band" style="--a:#3b82f6; --b:#ef4444; --gx:20%">
+    <div class="wrap row flip">
+      <div class="copy reveal" data-from="right">
+        <p class="kicker">Wiring</p>
+        <h2>Wires where they really run</h2>
+        <p>Power and network lines, drawn along the walls.</p>
+      </div>
+      <figure class="reveal" data-from="flip" style="--d:.1s"><div class="tilt glow"><div class="browser"><img src="photos/wires.webp" width="1440" height="900" loading="lazy" decoding="async" alt="Power and network lines in the new room"></div></div></figure>
+    </div>
+  </section>
+
+  <!-- 11 · devices -->
+  <section class="band" style="--a:#fb7185; --b:#fbbf24; --gx:80%">
+    <div class="wrap row">
+      <div class="copy reveal" data-from="left">
+        <p class="kicker">Devices</p>
+        <h2>Pick it. Place it.</h2>
+        <p>Outlets, switches, standing lamps and ceiling spots – straight from the catalogue.</p>
+      </div>
+      <div class="grid two">
+        <figure class="reveal" data-from="down"><div class="browser"><img src="photos/picker.webp" width="1440" height="900" loading="lazy" decoding="async" alt="The device picker"></div><figcaption>The picker</figcaption></figure>
+        <figure class="reveal" data-from="up" style="--d:.15s"><div class="browser"><img src="photos/devices.webp" width="1440" height="900" loading="lazy" decoding="async" alt="Placed lamps and outlets in first person"></div><figcaption>Placed</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 · lights -->
+  <section class="band center" style="--a:#fbbf24; --b:#8b5cf6; --gx:50%">
+    <div class="wrap">
+      <div class="copy reveal" data-from="up">
+        <p class="kicker">Light</p>
+        <h2>Light it. Measure it.</h2>
+        <p>Lux maps at any height, dimming, colour – and the sun through the windows.</p>
+      </div>
+      <div class="grid four">
+        <figure class="reveal" data-from="tilt-left"><div class="browser"><img src="photos/heatmap.webp" width="1440" height="900" loading="lazy" decoding="async" alt="Lux map on the floor of the room"></div><figcaption>Lux map<span>at any height</span></figcaption></figure>
+        <figure class="reveal" data-from="tilt-right" style="--d:.12s"><div class="browser"><img src="photos/colour.webp" width="1440" height="900" loading="lazy" decoding="async" alt="Dimmed, coloured lamps"></div><figcaption>Dimming &amp; colour<span>warm, cool, any tint</span></figcaption></figure>
+        <figure class="reveal" data-from="tilt-left" style="--d:.24s"><div class="browser"><img src="photos/sun.webp" width="1440" height="900" loading="lazy" decoding="async" alt="The sun turned around the house"></div><figcaption>The sun<span>turned around the house</span></figcaption></figure>
+        <figure class="reveal" data-from="tilt-right" style="--d:.36s"><div class="browser"><img src="photos/daylight.webp" width="1440" height="900" loading="lazy" decoding="async" alt="Daylight falling through a window"></div><figcaption>Daylight<span>through windows and doors</span></figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 · photos -->
+  <section class="band" style="--a:#42e695; --b:#2a6fdb; --gx:20%">
+    <div class="wrap row flip">
+      <div class="copy reveal" data-from="right">
+        <p class="kicker">Materials</p>
+        <h2>Your photos on the walls</h2>
+        <p>Walls, floor and ceiling – see the real materials before you buy them.</p>
+      </div>
+      <figure class="reveal" data-from="spin" style="--d:.1s"><div class="tilt glow"><div class="browser"><img src="photos/photos.webp" width="1440" height="900" loading="lazy" decoding="async" alt="Brick, wallpaper and parquet photos on the new room's surfaces"></div></div></figure>
+    </div>
+  </section>
+
+  <!-- 14 · notes -->
+  <section class="band" style="--a:#f472b6; --b:#facc15; --gx:85%">
+    <div class="wrap row">
+      <div class="copy reveal" data-from="left">
+        <p class="kicker">Notes</p>
+        <h2>Notes where they belong</h2>
+        <p>Pinned right on the wall – for you and your tradespeople.</p>
+      </div>
+      <figure class="reveal" data-from="right" style="--d:.1s"><div class="tilt glow"><div class="browser"><img src="photos/notes.webp" width="1440" height="900" loading="lazy" decoding="async" alt="Notes pinned on a wall in 3-D"></div></div></figure>
+    </div>
+  </section>
+
+  <!-- 15 · costs -->
+  <section class="band" style="--a:#10b981; --b:#84cc16; --gx:20%">
+    <div class="wrap row flip">
+      <div class="copy reveal" data-from="up">
+        <p class="kicker">Costs</p>
+        <h2>What it costs</h2>
+        <p>Prices in – totals per room and storey out.</p>
+      </div>
+      <figure class="reveal" data-from="zoom" style="--d:.1s"><div class="tilt glow"><div class="browser"><img src="photos/costs.webp" width="1440" height="900" loading="lazy" decoding="async" alt="The costs inspector with prices per device"></div></div></figure>
+    </div>
+  </section>
+
+  <!-- 16 · infrastructure -->
+  <section class="band center" style="--a:#22d3ee; --b:#2c5364; --gx:50%">
+    <div class="wrap">
+      <div class="copy reveal" data-from="zoom">
+        <p class="kicker">Infrastructure</p>
+        <h2>Every cable traced</h2>
+        <p>Circuits to the board, network runs to the switch, conduits that actually fit.</p>
+      </div>
+      <div class="grid three">
+        <figure class="reveal" data-from="up"><div class="browser"><img src="photos/circuits.webp" width="1440" height="900" loading="lazy" decoding="async" alt="Circuits from the distribution board through all storeys"></div><figcaption>Circuits</figcaption></figure>
+        <figure class="reveal" data-from="up" style="--d:.15s"><div class="browser"><img src="photos/network.webp" width="1440" height="900" loading="lazy" decoding="async" alt="Network runs to the switch"></div><figcaption>Network</figcaption></figure>
+        <figure class="reveal" data-from="up" style="--d:.3s"><div class="browser"><img src="photos/conduit.webp" width="1440" height="900" loading="lazy" decoding="async" alt="Conduit fill with a warning for a too narrow conduit"></div><figcaption>Conduits</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 17 · wifi -->
+  <section class="band" style="--a:#60a5fa; --b:#c084fc; --gx:85%">
+    <div class="wrap row">
+      <div class="copy reveal" data-from="left">
+        <p class="kicker">Wi-Fi</p>
+        <h2>Coverage at a glance</h2>
+        <p>Every access point with its reach – through every wall.</p>
+      </div>
+      <figure class="reveal" data-from="zoom" style="--d:.1s"><div class="tilt glow"><div class="browser bare"><img src="photos/wifi.webp" width="1440" height="1088" loading="lazy" decoding="async" alt="Wi-Fi spheres around the access points"></div></div></figure>
+    </div>
+  </section>
+
+  <!-- 18 · doctor -->
+  <section class="band" style="--a:#e94560; --b:#f5a623; --gx:20%">
+    <div class="wrap row flip">
+      <div class="copy reveal" data-from="right">
+        <p class="kicker">The Doctor</p>
+        <h2>Mistakes found. And fixed.</h2>
+        <p>A storey 35 cm off? Spotted, shown in 3-D, corrected in one click.</p>
+      </div>
+      <figure class="reveal" data-from="tilt-left" style="--d:.1s"><div class="tilt glow"><div class="browser"><img src="photos/doctor.webp" width="1440" height="900" loading="lazy" decoding="async" alt="The Doctor showing a misaligned storey with a fix"></div></div></figure>
+    </div>
+  </section>
+
+  <!-- 19 · phones -->
+  <section class="band center" style="--a:#6a82fb; --b:#fc5c7d; --gx:50%">
+    <div class="wrap">
+      <div class="copy reveal" data-from="up">
+        <p class="kicker">Everywhere</p>
+        <h2>On every screen</h2>
+        <p>iPhone, iPad, Mac – and any browser.</p>
+      </div>
+      <div class="phones">
+        <div class="phone reveal" data-from="up"><img src="photos/phone-house.webp" width="600" height="1300" loading="lazy" decoding="async" alt="The house on a phone"></div>
+        <div class="phone reveal" data-from="up" style="--d:.1s"><img src="photos/phone-room.webp" width="600" height="1300" loading="lazy" decoding="async" alt="A room on a phone"></div>
+        <div class="phone reveal" data-from="up" style="--d:.2s"><img src="photos/phone-lights.webp" width="600" height="1300" loading="lazy" decoding="async" alt="Lights on a phone"></div>
+        <div class="phone reveal" data-from="up" style="--d:.3s"><img src="photos/phone-picker.webp" width="600" height="1300" loading="lazy" decoding="async" alt="The device picker on a phone"></div>
+        <div class="phone reveal" data-from="up" style="--d:.4s"><img src="photos/phone-walls.webp" width="600" height="1300" loading="lazy" decoding="async" alt="Wall editing on a phone"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 20 · settings -->
+  <section class="band" style="--a:#c084fc; --b:#f472b6; --gx:85%">
+    <div class="wrap row">
+      <div class="copy reveal" data-from="left">
+        <p class="kicker">Settings</p>
+        <h2>Settings with a smile</h2>
+        <p>Toys around the card – and a die to try every option.</p>
+      </div>
+      <figure class="reveal" data-from="spin" style="--d:.1s"><div class="tilt glow"><div class="browser"><img src="photos/settings.webp" width="1440" height="900" loading="lazy" decoding="async" alt="The settings card with playful animations around it"></div></div></figure>
+    </div>
+  </section>
+
+  <!-- 21 · tour -->
+  <section class="band center" style="--a:#ef4444; --b:#facc15; --gx:50%">
+    <div class="wrap">
+      <div class="copy reveal" data-from="down">
+        <p class="kicker">Learn</p>
+        <h2>A guided tour of everything</h2>
+        <p>Start it from the project list – or ask the little bus about just one topic.</p>
+      </div>
+      <div class="grid two">
+        <figure class="reveal" data-from="tilt-left"><div class="browser"><img src="photos/tour.webp" width="1440" height="900" loading="lazy" decoding="async" alt="The guided tour's curtain opening"></div><figcaption>The full tour</figcaption></figure>
+        <figure class="reveal" data-from="tilt-right" style="--d:.15s"><div class="browser"><img src="photos/tourmini.webp" width="1440" height="900" loading="lazy" decoding="async" alt="The small tour bus explaining one topic"></div><figcaption>The little bus</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 22 · undo -->
+  <section class="band" style="--a:#38bdf8; --b:#818cf8; --gx:20%">
+    <div class="wrap row flip">
+      <div class="copy reveal" data-from="right">
+        <p class="kicker">Undo</p>
+        <h2>Undo. Redo.</h2>
+        <p>Every step. Every time.</p>
+      </div>
+      <figure class="reveal" data-from="left" style="--d:.1s"><div class="tilt glow"><div class="browser"><img src="photos/undo.webp" width="1440" height="900" loading="lazy" decoding="async" alt="The room after an undo"></div></div></figure>
+    </div>
+  </section>
+
+  <!-- 23 · exchange -->
+  <section class="band" style="--a:#2dd4bf; --b:#a3e635; --gx:85%">
+    <div class="wrap row">
+      <div class="copy reveal" data-from="up">
+        <p class="kicker">Share</p>
+        <h2>Take it anywhere</h2>
+        <p>One ZIP moves a project between browser, iPhone, iPad and Mac.</p>
+      </div>
+      <figure class="reveal" data-from="flip" style="--d:.1s"><div class="tilt glow"><div class="browser"><img src="photos/exchange.webp" width="1440" height="900" loading="lazy" decoding="async" alt="A project exported and imported again"></div></div></figure>
+    </div>
+  </section>
+
+  <!-- 24 · eyes -->
+  <section class="band center eyes">
+    <div class="wrap">
+      <div class="copy reveal" data-from="zoom">
+        <p class="kicker">One more thing</p>
+        <h2>See it through everyone's eyes</h2>
+        <p>Same room, five eye heights.</p>
+      </div>
+      <div class="grid five">
+        <figure class="eye reveal" data-from="up"><img src="photos/eye-toddler.webp" width="1440" height="1088" loading="lazy" decoding="async" alt="The room at a toddler's eye height"><figcaption>Toddler<span>0.40 m</span></figcaption></figure>
+        <figure class="eye reveal" data-from="up" style="--d:.1s"><img src="photos/eye-child.webp" width="1440" height="1088" loading="lazy" decoding="async" alt="The room at a child's eye height"><figcaption>Child<span>1.00 m</span></figcaption></figure>
+        <figure class="eye reveal" data-from="up" style="--d:.2s"><img src="photos/eye-teenager.webp" width="1440" height="1088" loading="lazy" decoding="async" alt="The room at a teenager's eye height"><figcaption>Teenager<span>1.40 m</span></figcaption></figure>
+        <figure class="eye reveal" data-from="up" style="--d:.3s"><img src="photos/eye-adult.webp" width="1440" height="1088" loading="lazy" decoding="async" alt="The room at an adult's eye height"><figcaption>Adult<span>1.70 m</span></figcaption></figure>
+        <figure class="eye reveal" data-from="up" style="--d:.4s"><img src="photos/eye-giant.webp" width="1440" height="1088" loading="lazy" decoding="async" alt="The room at a giant's eye height"><figcaption>Giant<span>1.95 m</span></figcaption></figure>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="end">
+  <h2 class="reveal" data-from="zoom">hAusbau</h2>
+  <p class="reveal" data-from="up" style="--d:.2s">Your house. Planned together.</p>
+  <aside class="contact reveal" style="--d:.35s" data-from="up">
+      <p><strong>Like what you see?</strong> Development is ongoing – if you are interested, get in touch:</p>
+      <a href="mailto:hausbau@garvinhicking.de">hausbau@garvinhicking.de</a>
+    </aside>
+  <aside class="disclaimer reveal" style="--d:.45s" data-from="up">
+    <p>This app was created with the (heavy) use of <em class="ai">AI</em> (Claude Code) for educational reasons, suited to my own needs and tested quite a bit 'in production' already.</p>
+  </aside>
+  <small>iPhone · iPad · Mac · Web</small>
+</footer>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!("IntersectionObserver" in window)) return;   // no observer: everything stays visible
+  root.classList.add("js");
+
+  // Each panel slides in once, from the side its data-from names.
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+  }, { threshold: 0.15, rootMargin: "0px 0px -8% 0px" });
+  document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+  // Progress bar, the hero screen straightening up, and screens tilting a little as they pass.
+  const bar = document.querySelector(".progress");
+  const hero = document.querySelector(".hero-shot");
+  const tilts = [...document.querySelectorAll(".tilt")];
+  const visible = new Set();
+  const seen = new IntersectionObserver((entries) => {
+    for (const e of entries) e.isIntersecting ? visible.add(e.target) : visible.delete(e.target);
+  });
+  tilts.forEach((el) => seen.observe(el));
+  let queued = false;
+  const update = () => {
+    queued = false;
+    const h = innerHeight;
+    const max = root.scrollHeight - h;
+    bar.style.setProperty("--p", max > 0 ? (scrollY / max).toFixed(4) : 0);
+    if (still) return;
+    hero.style.setProperty("--s", Math.min(1, scrollY / (h * 0.5)).toFixed(3));
+    for (const el of visible) {
+      const r = el.getBoundingClientRect();
+      const t = ((r.top + r.height / 2) - h / 2) / h;   // −0.5 … 0.5 while on screen
+      el.style.setProperty("--t", Math.max(-1, Math.min(1, t * 2)).toFixed(3));
+    }
+  };
+  const queue = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
+  addEventListener("scroll", queue, { passive: true });
+  addEventListener("resize", queue);
+  update();
+})();
+</script>
+</body>
+</html>
