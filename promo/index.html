@@ -892,11 +892,22 @@ figcaption span { display: block; font-weight: 400; color: var(--muted); font-si
     el.classList.remove("live");
     if (active === el) active = null;
   };
+  // Mouse: while hovered. Keyboard: while focused. Touch has no hover: a tap switches the effect on,
+  // the next tap off – the photo doesn't open the mail there (the mail button does).
   avatars.forEach((el) => {
-    el.addEventListener("pointerenter", () => start(el));
-    el.addEventListener("pointerleave", () => stop(el));
-    el.addEventListener("focus", () => start(el));
-    el.addEventListener("blur", () => stop(el));
+    let pointer = "mouse", touchOn = false;
+    el.addEventListener("pointerdown", (e) => { pointer = e.pointerType; });
+    el.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") start(el); });
+    el.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") stop(el); });
+    el.addEventListener("focus", () => { if (el.matches(":focus-visible")) start(el); });
+    el.addEventListener("blur", () => { if (!touchOn) stop(el); });
+    el.addEventListener("click", (e) => {
+      if ((e.pointerType || pointer) === "mouse" || e.detail === 0) return;   // mouse or keyboard: the mail link
+      e.preventDefault();
+      touchOn = !touchOn;
+      touchOn ? start(el) : stop(el);
+      el.blur();
+    });
   });
 })();
 </script>
