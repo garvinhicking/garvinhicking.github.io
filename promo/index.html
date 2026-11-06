@@ -231,7 +231,8 @@ figcaption span { display: block; font-weight: 400; color: var(--muted); font-si
 @property --spin { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
 .avatar {
   float: left; width: 96px; height: 96px; margin: 0 20px 6px 0; padding: 3px; border-radius: 50%;
-  shape-outside: circle(50%); position: relative; z-index: 1;
+  shape-outside: circle(50%); position: relative; z-index: 1; touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none;
   background: conic-gradient(from var(--spin), #ff3b30, #ff9500, #ffd60a, #34c759, #0a84ff, #af52de, #ff3b30);
   box-shadow: 0 10px 26px -12px rgba(175, 82, 222, .8);
 }
@@ -710,8 +711,9 @@ figcaption span { display: block; font-weight: 400; color: var(--muted); font-si
 // The photo in the contact boxes: hovered (or focused) it pulses, and a signal goes out across the
 // whole screen – rainbow rings rippling outwards, stars flying off its edge, and now and then a
 // unicorn (from the tour's finale), a hammer or nails (from the Settings toys).
+// Reduced motion: no effect from merely hovering or tabbing past; a deliberate tap still plays it.
 (() => {
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const avatars = document.querySelectorAll(".avatar");
   if (!avatars.length) return;
 
@@ -894,15 +896,21 @@ figcaption span { display: block; font-weight: 400; color: var(--muted); font-si
   };
   // Mouse: while hovered. Keyboard: while focused. Touch has no hover: a tap switches the effect on,
   // the next tap off – the photo doesn't open the mail there (the mail button does).
+  // A tap is recognised by its touchstart/pointerdown, not by the click: iPhone Safari reports the
+  // click that follows a tap as pointerType "mouse".
   avatars.forEach((el) => {
-    let pointer = "mouse", touchOn = false;
-    el.addEventListener("pointerdown", (e) => { pointer = e.pointerType; });
-    el.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") start(el); });
+    let touch = false, touchOn = false;
+    const touched = () => { touch = true; };
+    el.addEventListener("touchstart", touched, { passive: true });
+    el.addEventListener("pointerdown", (e) => { touch = e.pointerType !== "mouse"; });
+    el.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse" && !calm) start(el); });
     el.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") stop(el); });
-    el.addEventListener("focus", () => { if (el.matches(":focus-visible")) start(el); });
+    el.addEventListener("focus", () => { if (el.matches(":focus-visible") && !calm) start(el); });
     el.addEventListener("blur", () => { if (!touchOn) stop(el); });
     el.addEventListener("click", (e) => {
-      if ((e.pointerType || pointer) === "mouse" || e.detail === 0) return;   // mouse or keyboard: the mail link
+      const tap = touch && e.detail !== 0;   // detail 0: Enter on the keyboard
+      touch = false;
+      if (!tap) return;                      // mouse or keyboard: the mail link
       e.preventDefault();
       touchOn = !touchOn;
       touchOn ? start(el) : stop(el);
