@@ -11,10 +11,15 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png" />
 <meta name="theme-color" content="#151515" />
 <title>Switchboard</title>
-<style>html,body{overscroll-behavior:none;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;background:#111;height:100%;margin:0;overflow:hidden}#app{position:fixed;inset:0}canvas{touch-action:none;width:100%;height:100%;display:block}.sb-no-blur *{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}</style>
-  <script type="module" crossorigin src="./assets/index-Dr9Rt-j0.js"></script>
+<style>html,body{overscroll-behavior:none;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;background:#111;height:100%;margin:0;overflow:hidden}#app{position:fixed;inset:0}canvas{touch-action:none;width:100%;height:100%;display:block}#sb-boot{z-index:50;color:#f3e6cf;letter-spacing:.03em;background:#111;flex-direction:column;justify-content:center;align-items:center;gap:16px;font:600 17px/1.3 system-ui,sans-serif;transition:opacity .2s;display:flex;position:fixed;inset:0}#sb-boot i{border:5px solid #f3e6cf38;border-top-color:#f3e6cf;border-radius:50%;width:54px;height:54px;animation:.8s linear infinite sb-boot-spin}@keyframes sb-boot-spin{to{transform:rotate(360deg)}}.sb-no-blur *{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}</style>
+  <script type="module" crossorigin src="./assets/index-OK3ilPpP.js"></script>
 </head>
 <body>
 <div id="app"></div>
+<div id="sb-boot" data-testid="boot-loading" role="status"><i></i><span>Lädt…</span></div>
+<script>
+  // the spinner's word in the chosen language (the app itself is not loaded yet)
+  try { if (JSON.parse(localStorage.getItem('switchboard.settings') || '{}').language === 'en') document.querySelector('#sb-boot span').textContent = 'Loading…'; } catch (e) {}
+</script>
 </body>
 </html>
