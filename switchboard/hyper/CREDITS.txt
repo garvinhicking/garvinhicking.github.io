@@ -1,0 +1,13 @@
+Scanned materials of Hyper Quality. All are published under CC0 1.0 (public domain dedication):
+no attribution is required; the makers are named here with thanks.
+
+wood_*.jpg       "Oak Veneer 01" by Jenelle van Heerden, Poly Haven        https://polyhaven.com/a/oak_veneer_01
+darkwood_*.jpg   "Wood Table 001" by Dimitrios Savva and Rico Cilliers, Poly Haven   https://polyhaven.com/a/wood_table_001
+studio.hdr       "Studio Small 08" by Sergej Majboroda, Poly Haven          https://polyhaven.com/a/studio_small_08
+metal_*.jpg      "Metal 009", ambientCG                                     https://ambientcg.com/a/Metal009
+marks.jpg        "Fingerprints 007", "Smear 003", "Scratches 002" and "Scratches 004", ambientCG
+                 https://ambientcg.com/a/Fingerprints007  https://ambientcg.com/a/Smear003
+                 https://ambientcg.com/a/Scratches002     https://ambientcg.com/a/Scratches004
+grain.jpg        "Oak Veneer 01" by Jenelle van Heerden, Poly Haven        https://polyhaven.com/a/oak_veneer_01
+
+The pictures were cropped, resized and put together with web/scripts/make-hyper-textures.py.
