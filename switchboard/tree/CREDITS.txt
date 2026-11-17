@@ -1,0 +1,12 @@
+Pictures of the Christmas tree. All are published under CC0 1.0 (public domain dedication): no attribution is
+required; the makers are named here with thanks.
+
+fir_*.jpg, bark_fir_*.jpg     "Fir Tree 01" by Rico Cilliers (model) and Rob Tuytel (photography), Poly Haven
+                              https://polyhaven.com/a/fir_tree_01
+pine_*.jpg, bark_pine_*.jpg   "Pine Tree 01" by Rico Cilliers (model) and Rob Tuytel (photography), Poly Haven
+                              https://polyhaven.com/a/pine_tree_01
+floor_*.jpg                   "Wood Floor" by Dimitrios Savva, Poly Haven              https://polyhaven.com/a/wood_floor
+christmas.hdr                 "Christmas Photo Studio 01" by Sergej Majboroda, Poly Haven https://polyhaven.com/a/christmas_photo_studio_01
+
+The twigs were cut out of the models' twig sheets, turned upright and put into sheets of their own, the scans
+resized, with web/scripts/make-tree-textures.py.
