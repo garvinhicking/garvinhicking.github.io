@@ -1,0 +1,14 @@
+Pictures of the pizza game. All are published under CC0 1.0 (public domain dedication): no attribution is
+required; the makers are named here with thanks.
+
+kitchen/table_*.jpg   "Wood Table 001" by Dimitrios Savva (photography) and Rico Cilliers (processing), Poly Haven
+                      https://polyhaven.com/a/wood_table_001
+kitchen/room.hdr      "Warm Restaurant" by Greg Zaal (photography) and Jarod Guest (processing), Poly Haven
+                      https://polyhaven.com/a/warm_restaurant
+dough/flour_*.jpg     "Macro Flour" by Jenelle van Heerden (photography) and Dario Barresi (processing), Poly Haven
+                      https://polyhaven.com/a/macro_flour
+dough/maple_*.jpg     "White Maple Veneer" by Jenelle van Heerden, Poly Haven
+                      https://polyhaven.com/a/white_maple_veneer
+
+The scans were resized and recompressed with web/scripts/make-pizza-textures.py. Everything else the pizza game
+shows (the dough, the ingredients, the mixing bowl, the tools) is painted in code.
